@@ -1,54 +1,53 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect } from "react";
 import { CgMouse } from "react-icons/all";
-import "./Home.css"
+import "./Home.css";
 import Product from "./Product.js";
-import MetaData from '../layout/metaData';
+import MetaData from "../layout/metaData";
 import { getProduct } from "../../actions/productActions";
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux";
 import Loader from "../layout/loader/Loader";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const { products, loading, error, productCount } = useSelector(
+    (state) => state.products
+  );
 
-      const dispatch = useDispatch();
-      const { products, loading, error, productCount  } = useSelector(state => state.products)
-      
+  useEffect(() => {
+    dispatch(getProduct());
+  }, [dispatch]);
 
-      useEffect(() => {
-         dispatch(getProduct())
-      }, [dispatch])
+  console.log(products);
 
-      console.log(products)
+  return (
+    <Fragment>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Fragment>
+          <MetaData title="ECOMMERS" />
 
-      
+          <div className="banner">
+            <p>Welcome to Ecommerce</p>
+            <h1>FIND AMAZING PRODUCTS BELOW</h1>
 
-      return (
-            <Fragment>
-                  {loading ? <Loader /> : 
-                        <Fragment>
-                              <MetaData title="ECOMMERS" />
+            <a href="#container">
+              <button>
+                Scroll <CgMouse />
+              </button>
+            </a>
+          </div>
 
-                              <div className='banner'>
-                                    <p>Welcome to Ecommerce</p>
-                                    <h1>FIND AMAZING PRODUCTS BELOW</h1>
+          <h2 className="homeHeading"> Featured Products</h2>
 
-                                    <a href="#container">
-                                          <button>
-                                                Scroll <CgMouse />
-                                          </button>
-                                    </a>
-                              </div>
+          <div className="container" id="container">
+            {products &&
+              products.map((product) => <Product product={product} />)}
+          </div>
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
 
-                              <h2 className="homeHeading"> Featured Products</h2>
-
-                              <div className='container' id='container'>
-                                    {
-                                          products && products.map((product) => <Product product={product} />)
-                                    }
-                              </div>
-                        </Fragment>
-                  }
-           </Fragment>
-      )
-}
-
-export default Home
+export default Home;
